@@ -13,12 +13,12 @@ struct item {
 class room {
  public:
   room();
-  room(char*);
+  room(const char*);
   char* getDescription();
-  void setExit(char *dir, room *r);
-  room* getExit(char *dir);
-  void setItem(char *n);
-  void removeItem(char *n);
+  void setExit(const char *dir, room *r);
+  room* getExit(const char *dir);
+  void setItem(const char *n);
+  void removeItem(const char *n);
   void getRoomDetails();
  public:
   vector<item*> itemsList;
