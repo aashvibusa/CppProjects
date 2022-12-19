@@ -5,6 +5,8 @@
 
 using namespace std;
 
+int add(vector<item*> &x, char *d);
+
 int main() {
   
   //Create the rooms
@@ -108,24 +110,38 @@ int main() {
   back_room->setItem("handkerchief");
 
   vector<item*> inventory;
+  //char* ItemRing
 
   //Start play sequence
   bool stillPlaying = true;
 
   while(stillPlaying) {
 
+    //Win condition: find all the items
+    if(inventory.size() == 5) {
+      cout << "Great job you found all the items! You are now ready to go on an adventure." << endl;
+      stillPlaying = false;
+    }
+
+    //Get user input
     char in[40];
     cout << "> ";
     cin.get(in, 40);
     cin.get();
-    
+
+    //Execute command based on user input
     if(strcmp(in, "help") == 0) {
       cout << "You are lost and in need of assistance." << endl;
       cout << "Your command words are: go get drop inventory help quit" << endl;
     } else if(strcmp(in, "inventory") == 0) {
-      cout << "You are carrying: " << endl;
-      for(int i = 0; i < inventory.size(); i++) {
-	cout << inventory.at(i)->description << " "; 
+      if(!inventory.empty()) {
+	cout << "You are carrying: ";
+	for(int i = 0; i < inventory.size(); i++) {
+	  cout << inventory.at(i)->description << " ";
+	}
+	cout << " " << endl;
+      } else {
+	cout << "You currently have no items in your inventory." << endl;
       }
     } else if(strcmp(in, "quit") == 0) {
       cout << "Thank you for playing. Goodbye." << endl;
@@ -137,11 +153,12 @@ int main() {
     } else if(strcmp(in, "drop") == 0) {
       cout << "Drop what?" << endl;
     } else {
+      
+      //Split commands with two words
       char *token = strtok(in, " ");
       char *firstWord;
       char *secondWord;
       int count = 1;
-      
       while(token != NULL) {
 	if(count == 1) {
 	  firstWord = token;
@@ -153,8 +170,8 @@ int main() {
 	count++;
       }
 
+      //Execute command based on user input
       if(strcmp(firstWord, "go") == 0) {
-	cout << secondWord << endl;
 	current_room = current_room->getExit(secondWord);
 	cout << " " << endl;
 	cout << "You are " << current_room->getDescription() << endl;
@@ -162,19 +179,30 @@ int main() {
       } else if(strcmp(firstWord, "get") == 0) {
 	current_room->removeItem(secondWord);
 	item *i = new item;
-	i->description = secondWord;
-	inventory.push_back(i);
-	cout << "Picked up: " << secondWord << endl;
+	if(strcmp("pipe", secondWord) == 0) {
+	  i->description = "pipe";
+	  inventory.push_back(i);
+	} else if(strcmp("ring", secondWord) == 0) {
+	  i->description = "ring";
+	  inventory.push_back(i);
+	} else if(strcmp("book", secondWord) == 0) {
+	  i->description = "book";
+	  inventory.push_back(i);
+	} else if(strcmp("seedcake", secondWord) == 0) {
+	  i->description = "seedcake";
+	  inventory.push_back(i);
+	} else if(strcmp("handkerchief", secondWord) == 0) {
+	  i->description = "handkerchief";
+	  inventory.push_back(i);
+	}
       } else if(strcmp(firstWord, "drop") == 0) {
 	current_room->setItem(secondWord);
-	cout << secondWord << endl;
 	bool there = false;
-	if(inventory.empty()) {
-	
+	if(!inventory.empty()) {
 	  for(vector<item*>::iterator it = inventory.begin() ; it != inventory.end(); )
 	    if(strcmp((*it)->description, secondWord) == 0) {
-	      inventory.erase(it);
 	      there = true;
+	      inventory.erase(it);
 	    }
 	
 	  if(there) {
@@ -187,7 +215,6 @@ int main() {
 	}
       }
     }
-    
   }
   return 0;
 }

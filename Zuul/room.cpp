@@ -52,13 +52,18 @@ void room::setItem(const char *n) {
 }
 
 void room::removeItem(const char *n) {
-  if(itemsList.size() != 0) {
+  bool there = false;
+  if(!itemsList.empty()) {
     for(vector<item*>::iterator it = itemsList.begin() ; it != itemsList.end(); )
       if(strcmp((*it)->description, n) == 0) {
+	cout << "Picked up: " << (*it)->description << endl;
 	itemsList.erase(it);
-      } 
+	there = true;
+      }
   } else {
-    cout << "That item is not here!" << endl;
+    if(!there) {
+      cout << "That item is not here!" << endl;
+    }
   }
 }
 
