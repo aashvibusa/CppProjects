@@ -7,7 +7,7 @@
 using namespace std;
 
 struct item {
-  char *description;
+  const char *description;
 };
 
 class room {
