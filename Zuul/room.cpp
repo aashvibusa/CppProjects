@@ -17,6 +17,8 @@ room::room() {
 
 room::room(const char *d) {
   roomDescription = new char[100];
+  itemDescription = new char[100];
+  direction = new char[30];
   strcpy(roomDescription, d);
 }
 
@@ -31,8 +33,13 @@ void room::setExit(const char *dir, room *r) {
 }
 
 room* room::getExit(const char *dir) {
-  direction = new char[30];
+  direction = new char[10];
   strcpy(direction, dir);
+  for(auto i = exits.begin(); i != exits.end(); i++)
+    if(strcmp(i->first, direction) == 0) {
+      return exits.at(i->first);
+    }
+  cout << "There is no exit there!" << endl; 
   return exits.at(direction);
 }
 
@@ -49,21 +56,26 @@ void room::removeItem(const char *n) {
     for(vector<item*>::iterator it = itemsList.begin() ; it != itemsList.end(); )
       if(strcmp((*it)->description, n) == 0) {
 	itemsList.erase(it);
-      }
+      } 
   } else {
     cout << "That item is not here!" << endl;
   }
 }
 
 void room::getRoomDetails() {
+
   cout << "Exits: ";
   for(auto i = exits.begin(); i != exits.end(); i++)
-    cout << i->first << ", ";
+    cout << i->first << " ";
 
+  cout << " " << endl;
   cout << "Items: ";
   if(itemsList.size() != 0) {
     for(int i = 0; i < itemsList.size(); i++) {
       cout << itemsList.at(i)->description;
     }
+    cout << " " << endl;
+  } else {
+    cout << "none" << endl;
   }
 }
