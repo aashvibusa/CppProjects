@@ -15,6 +15,7 @@ using namespace std;
 //Function prototypes
 void add(Student* newStudent, Node*& h, Node* p, Node* c);
 void print(Node* next, Node* h);
+void del(int id, Node*& h, Node* c);
 
 int main() {
 
@@ -70,6 +71,12 @@ int main() {
       
     } else if(strcmp(command, "quit") == 0) {
       cont = false;
+    } else if(strcmp(command, "delete") == 0) {
+      int in = 0;
+      cout << "Enter an id number to delete: ";
+      cin >> in;
+      cin.get();
+      del(in, head, head);
     } else {
       cout << "Invalid command" << endl;
     }
@@ -97,6 +104,31 @@ void add(Student* newStudent, Node*& h, Node* p, Node* c) {
   } else {
     add(newStudent, h, c, c->getNext());
   }
+}
+
+void del(int id, Node*& h, Node* c) {
+  if(h == NULL) {
+    cout << "There are no students in the list!" << endl;
+  } else if(c->getStudent()->getId() == id) {
+
+    if(h->getNext() == NULL) {
+      delete c;
+      h = NULL;
+    } else if(h == c) {
+      c = h->getNext();
+      delete h;
+      h = c;
+    } else if(c != NULL) {
+      Node* temp = c->getNext();
+      delete c;
+      c = temp;
+    }
+    
+  } else {
+    del(id, h, c->getNext());
+  }
+  cout << id << " was deleted" << endl;
+  cout << " " << endl;
 }
 
 //Print the linked list
