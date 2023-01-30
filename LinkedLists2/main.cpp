@@ -94,7 +94,7 @@ int main() {
   return 0;
 }
 
-//Add a new node to the linked list
+//Add a new node to the list
 void add(Student* newStudent, Node*& h, Node* p, Node* c) {
 
   if(h == NULL) { //Empty list
@@ -119,6 +119,7 @@ void add(Student* newStudent, Node*& h, Node* p, Node* c) {
   }
 }
 
+//Delete a node from the list
 void del(int id, Node*& h, Node* c) {
   
   if(h == NULL) { //Empty list
@@ -146,7 +147,7 @@ void del(int id, Node*& h, Node* c) {
   cout << " " << endl;
 }
 
-//Average all the GPAs in the linked list
+//Average all the GPAs in the list
 void average(Node* h, Node* c, float avg, int count) {
   
   if(h == NULL) { //Empty list
@@ -164,7 +165,7 @@ void average(Node* h, Node* c, float avg, int count) {
   }
 }
 
-//Print the linked list
+//Print the list
 void print(Node* next, Node* h) {
   if(next != NULL) {
     Student* s = next->getStudent();
