@@ -17,10 +17,12 @@ Hash::Hash() {
   }
 }
 
+//Hash function 
 int Hash::hashFunction(int k) {
   return (k % buckets);
 }
 
+//Add a student to the hash table and check for rehash
 void Hash::add(int k, Student *s) {
   int chain = 0;
   int index = hashFunction(k);
@@ -51,6 +53,7 @@ void Hash::add(int k, Student *s) {
   }
 }
 
+//Delete a student from the hash table
 void Hash::del(int k) {
   int index = hashFunction(k);
   Node *current = table[index];
@@ -78,6 +81,7 @@ void Hash::del(int k) {
   }
 }
 
+//Rehash exsiting hash table
 void Hash::rehash() {
   int oldCapacity = buckets;
   Node **temp = table;
@@ -100,6 +104,7 @@ void Hash::rehash() {
   delete[] temp;
 }
 
+//Print the hash table
 void Hash::print() {
   cout << " " << endl;
   for(int i = 0; i < buckets; i++) {
