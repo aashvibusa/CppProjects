@@ -77,6 +77,7 @@ int main() {
       cin >> in;
       cin.get();
       h.del(in);
+      cout << " " << endl;
       
     } else if(strcmp(command, "random") == 0) {
 

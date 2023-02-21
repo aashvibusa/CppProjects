@@ -61,15 +61,13 @@ void Hash::del(int k) {
   if(table[index] == NULL) {
     cout << "That student is not in the list!" << endl;
   } else {
-    while(current->getStudent()->getId() != k && current->getNext() != NULL) {
+    while(current->getStudent()->getId() != k && current != NULL) {
       current = current->getNext();
     }
     if(table[index]->getNext() == NULL) {
-      delete current;
       table[index] = NULL;
     } else if(table[index] == current) {
       current = table[index]->getNext();
-      delete table[index];
       table[index] = current;
     } else if(current != NULL) {
       Node *temp = current->getNext();
