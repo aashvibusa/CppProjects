@@ -70,9 +70,19 @@ void Hash::del(int k) {
       current = table[index]->getNext();
       table[index] = current;
     } else if(current != NULL) {
-      Node *temp = current->getNext();
-      delete current;
-      current = temp;
+      if(current->getNext() == NULL) {
+	Node *temp = table[index];
+	while(temp->getNext()->getNext() != NULL) {
+	  temp = temp->getNext();
+	}
+	Node *last = temp->getNext();
+	temp->setNext(NULL);
+	free(last);
+      } else {
+	Node *temp = current->getNext();
+	delete current;
+	current = temp;
+      }
     } else {
       cout << "That student is not in this list!" << endl;
     } 

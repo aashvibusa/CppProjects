@@ -27,7 +27,7 @@ int main() {
   while(cont) {
 
     //Get user input for command
-    cout << "Enter a command: ";
+    cout << "Enter a command (add, delete, random, print, or quit): ";
     cin.get(command, 10);
     cin.get();
 
