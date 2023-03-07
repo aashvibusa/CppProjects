@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <fstream>
 
 using namespace std;
 
@@ -60,7 +61,9 @@ int main() {
     } else if(strcmp(command, "file") == 0) {
 
       ifstream numbers("numbers.txt");
-      while(
+      int in = 0;
+      
+      while(in < 100 && numbers >> arr[in]) ++in;
 
     } else {
       cout << "Invalid command" << endl;
