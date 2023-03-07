@@ -4,6 +4,13 @@
 
 using namespace std;
 
+/*
+ * This program allows users to add (manually or from a file), remove, and print numbers in a heap
+ * Author: Aashvi Busa
+ * 3/5/23
+ */
+
+//Initialize function prototypes
 void heap(int *x, int n, int i);
 void sort(int *x, int n);
 void add(int *x, int &n, int val);
@@ -13,10 +20,10 @@ void print(int *x, int space, int root);
 
 int main() {
 
+  //Initialize variables
   int *arr = new int[100];
   int arrSize = 0;
   char *command = new char[15];
-
   bool cont = true;
 
   //Continue until user quits
@@ -83,6 +90,7 @@ int main() {
   return 0;
 }
 
+//Build heap
 void heap(int *x, int n, int i) {
 
   int largest = i;
@@ -106,6 +114,7 @@ void heap(int *x, int n, int i) {
   }
 }
 
+//Sort heap to max hierarchy
 void sort(int *x, int n) {
 
   for(int i = (n / 2) - 1; i >= 0; i--) {
@@ -113,6 +122,7 @@ void sort(int *x, int n) {
   }
 }
 
+//Add values to heap
 void add(int *x, int &n, int val) {
 
   x[n] = val;
@@ -122,6 +132,7 @@ void add(int *x, int &n, int val) {
   cout << " " << endl;
 }
 
+//Remove root from heap
 int remove(int *x, int &n) {
 
   int last = x[n - 1];
@@ -136,6 +147,7 @@ int remove(int *x, int &n) {
   return root;
 }
 
+//Remove all values in heap
 void removeAll(int *x, int n) {
 
   int length = n;
@@ -148,6 +160,7 @@ void removeAll(int *x, int n) {
   cout << " " << endl;
 }
 
+//Print heap
 void print(int *x, int space, int root) {
 
   if(x[root] < 1 || x[root] > 1000) {
