@@ -30,6 +30,7 @@ int main() {
     //Execute function according to corresponding input
     if(strcmp(command, "add") == 0) {
 
+      //Get value input
       int value = 0;
       cout << "Enter a number: ";
       cin >> value;
@@ -40,6 +41,7 @@ int main() {
 
     } else if(strcmp(command, "print") == 0) {
 
+      //Sort and print heap
       sort(arr, arrSize);
       print(arr, 0, 0);
       cout << " " << endl;
@@ -50,27 +52,34 @@ int main() {
 
     } else if(strcmp(command, "remove") == 0) {
 
+      //Remove root
       cout << remove(arr, arrSize) << " was removed" << endl;
       cout << " " << endl;
 
     } else if(strcmp(command, "removeAll") == 0) {
 
+      //Remove all values
       removeAll(arr, arrSize);
       cout << " " << endl;
 
     } else if(strcmp(command, "file") == 0) {
 
+      //Read in file
       ifstream numbers("numbers.txt");
-      int in = 0;
-      
-      while(in < 100 && numbers >> arr[in]) ++in;
+
+      //Loop through numbers and add to array
+      while(arrSize < 100 && numbers >> arr[arrSize]) ++arrSize;
+
+      //Sort and print heap
+      sort(arr, arrSize);
+      print(arr, 0, 0);
+      cout << " " << endl;
 
     } else {
       cout << "Invalid command" << endl;
       cout << " " << endl;
     }
   }
-  
   return 0;
 }
 
