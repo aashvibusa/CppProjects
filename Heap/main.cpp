@@ -22,7 +22,7 @@ int main() {
   while(cont) {
 
     //Get user input for command
-    cout << "Enter a command (add, file, remove, remove all, print, or quit): ";
+    cout << "Enter a command (add, file, remove, removeAll, print, or quit): ";
     cin.get(command, 10);
     cin.get();
 
@@ -52,9 +52,15 @@ int main() {
       cout << remove(arr, arrSize) << " was removed" << endl;
       cout << " " << endl;
 
+    } else if(strcmp(command, "removeAll") == 0) {
+
+      removeAll(arr, arrSize);
+      cout << " " << endl;
+
     } else if(strcmp(command, "file") == 0) {
 
-      //ifstream numbers("numbers.txt"); 
+      ifstream numbers("numbers.txt");
+      while(
 
     } else {
       cout << "Invalid command" << endl;
