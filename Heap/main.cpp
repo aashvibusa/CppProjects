@@ -15,7 +15,7 @@ void heap(int *x, int n, int i);
 void sort(int *x, int n);
 void add(int *x, int &n, int val);
 int remove(int *x, int &n);
-void removeAll(int *x, int n);
+void removeAll(int *x, int &n);
 void print(int *x, int space, int root);
 
 int main() {
@@ -139,8 +139,8 @@ int remove(int *x, int &n) {
   int root = x[0];
 
   x[0] = last;
-  x[n - 1] = -1;
-  n = n - 1;
+  x[n - 1] = 0;
+  n--;
 
   heap(x, n, 0);
 
@@ -148,10 +148,10 @@ int remove(int *x, int &n) {
 }
 
 //Remove all values in heap
-void removeAll(int *x, int n) {
+void removeAll(int *x, int &n) {
 
   int length = n;
-
+  
   cout << "Removed: ";
   for(int i = 0; i < length; i++) {
     cout << remove(x, n) << " ";
@@ -170,11 +170,10 @@ void print(int *x, int space, int root) {
   space += 3;
   print(x, space, 2 * root + 2);
 
-  for(int i = 3; i < space; i++) {
+  for(int i = 4; i < space; i++) {
     cout << " ";
   }
 
   cout << x[root] << endl;
   print(x, space, 2 * root + 1);
-  
 }
