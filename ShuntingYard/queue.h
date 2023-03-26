@@ -8,6 +8,7 @@ class Queue {
   Queue();
   void enqueue(char n);
   void dequeue();
+  char* display();
  public:
   Node* front;
   Node* rear;

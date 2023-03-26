@@ -15,12 +15,15 @@ void Queue::enqueue(char n) {
 
   if(rear == NULL) {
     front = temp;
+    front->next = NULL;
     rear = temp;
+    rear->next = NULL;
     return;
+  } else {
+    rear->next = temp;
+    temp->next = NULL;
+    rear = temp;
   }
-
-  rear->next = temp;
-  rear = temp;
 }
 
 void Queue::dequeue() {
@@ -36,5 +39,20 @@ void Queue::dequeue() {
     rear = NULL;
   }
 
-  delete(temp);
+  free(temp);
+}
+
+char* Queue::display() {
+
+  Node* temp = front;
+  char* postfix = new char[40];
+  int index = 0;
+
+  while(temp != NULL) {
+    postfix[index] = temp->value;
+    temp = temp->next;
+    index++;
+  }
+
+  return postfix;
 }

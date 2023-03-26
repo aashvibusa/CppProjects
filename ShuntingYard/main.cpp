@@ -6,170 +6,210 @@
 
 using namespace std;
 
+/*
+ * This program allows a user to input an infix expression and output the expression in prefix, infix, or postfix form from an expresison tree
+ * Author: Aashvi Busa
+ * Date: 3/19/23
+ */
+
+//Function prototypes
+int precedence(char op);
+char* shuntingYard(char* infix, Stack s, Queue q);
+void push(Node** &tree, Node* t, int &top);
+Node* pop(Node** &tree, int &top);
+void buildTree(Node** &tree, int &top, char* postfix);
+void pre(Node* t);
+void in(Node* t);
+void post(Node* t);
+
 int main() {
-  // If you  wish take input from user:
-  //cout << "Insert Postorder Expression: " << endl;
-  //cin >> s;
-  Stack e;
-  expression_tree a;
-  node *x, *y, *z;
-  int l = s.length();
-  for (int i = 0; i < l; i++) {
-    // if read character is operator then popping two
-    // other elements from stack and making a binary
-    // tree
-    if (s[i] == '+' || s[i] == '-' || s[i] == '*'
-	|| s[i] == '/' || s[i] == '^') {
-      z = new node(s[i]);
-      x = e.pop();
-      y = e.pop();
-      z->left = y;
-      z->right = x;
-      e.push(z);
-    }
-    else {
-      z = new node(s[i]);
-      e.push(z);
+
+  //Initializing stack and queue
+  Stack stack;
+  Queue queue;
+
+  //Get user input for infix
+  char* input = new char[40];
+  cout << "Enter an infix expression: ";
+  cin.get(input, 40);
+  cin.get();
+
+  //Output postfix
+  char* postfix = shuntingYard(input, stack, queue);
+  cout << "Postfix expression: " << postfix << endl;
+  cout << " " << endl;
+
+  //Build expression tree
+  int len = strlen(postfix);
+  Node** tree = new Node*[len];
+  int top = -1;
+  buildTree(tree, top, postfix);
+
+  //Continue until user quits
+  bool cont = true;
+  while(cont) {
+
+    //Get user input for expression
+    char* input2 = new char[40];
+    cout << "Would you like to output the prefix, infix, or postfix expression (may also choose quit): ";
+    cin.get(input2, 40);
+    cin.get();
+
+    //Execute function according to input
+    if(strcmp(input2, "prefix") == 0) {
+      pre(tree[0]);
+      cout << " " << endl;
+      cout << " " << endl;
+    } else if(strcmp(input2, "infix") == 0) {
+      in(tree[0]);
+      cout << " " << endl;
+      cout << " " << endl;
+    } else if(strcmp(input2, "postfix") == 0) {
+      post(tree[0]);
+      cout << " " << endl;
+      cout << " " << endl;
+    } else if(strcmp(input2, "quit") == 0) {
+      cont = false;
+    } else {
+      cout << "Invalid input." << endl;
+      cout << " " << endl;
     }
   }
-  cout << " The Inorder Traversal of Expression Tree: ";
-  a.inorder(z);
   return 0;
 }
 
-int precedence(char op){
-  if(op == '+'||op == '-')
-    return 1;
-  if(op == '*'||op == '/')
+//Get precedence of operators
+int precedence(char op) {
+  if(op == '^') {
+    return 3;
+  } else if(op == '*'|| op == '/') {
     return 2;
+  } else if(op == '+'|| op == '-') {
+    return 1;
+  } else if(op == '(' || op == ')') {
+    return -1;
+  } else if(op == ' ') {
+    return -2;
+  } else {
+    return 0;
+  }
   return 0;
 }
 
-// Function to perform arithmetic operations.
-int applyOp(int a, int b, char op){
-  switch(op){
-  case '+': return a + b;
-  case '-': return a - b;
-  case '*': return a * b;
-  case '/': return a / b;
+//Shunting Yard algorithm for infix to postfix conversion
+char* shuntingYard(char* infix, Stack s, Queue q) {
+
+  int len = strlen(infix);
+  int count = 0;
+
+  while(count < len) { //Continue until there are no more characters
+    
+    if(precedence(infix[count]) == 0) { //Enqueue if number
+      q.enqueue(infix[count]);
+      count++;
+	
+    } else {
+
+      if(infix[count] == '(') { //Push if left brack
+	s.push(infix[count]);
+	count++;
+	  
+      } else if(infix[count] == ')') { //Enqueue and pop from stack until left bracket, then remove left bracket
+	while(s.peek() != '(') {
+	  q.enqueue(s.peek());
+	  s.pop();
+	}
+	s.pop();
+	count++;
+	  
+      } else if(precedence(infix[count]) == 1 || precedence(infix[count]) == 2 || precedence(infix[count]) == 3) { //Enqueue operators while precedence is higher
+	while(precedence(infix[count]) <= precedence(s.peek())) { 
+	  q.enqueue(s.peek());
+	  s.pop();
+	}
+	s.push(infix[count]);
+	count++;
+	
+      } else { //if space
+	count++;
+      }
+    }
+  }
+
+  //Enqueue remaining operators from stack
+  while(s.peek() != 'x') { 
+    q.enqueue(s.peek());
+    s.pop();
+  }
+
+  return(q.display());
+}
+
+//Push to tree
+void push(Node** &tree, Node* t, int &top) {
+  top++;
+  tree[top] = t;
+}
+
+//Pop from tree
+Node* pop(Node** &tree, int &top) {
+  top--;
+  return(tree[top + 1]);
+}
+
+//Build expression tree
+void buildTree(Node** &tree, int &top, char* postfix) {
+
+  Node* n;
+  Node* p1;
+  Node* p2;
+  int len = strlen(postfix);
+  int x;
+
+  //Loop until there are no more characters
+  for(int i = 0; i < len; i++) {
+    x = precedence(postfix[i]);
+    
+    if(x > 3 || x < 1) { //If number set left & right to NULL and push to tree
+      n = new Node(postfix[i]);
+      n->setLeft(NULL);
+      n->setRight(NULL);
+      push(tree, n, top);
+      
+    } else { //If operator set left & right to top 2 tree elements and push to tree
+      p1 = pop(tree, top);
+      p2 = pop(tree, top);
+      n = new Node(postfix[i]);
+      n->setLeft(p2);
+      n->setRight(p1);
+      push(tree, n, top);
+    }
   }
 }
 
-// Function that returns value of
-// expression after evaluation.
-int evaluate(string tokens){
-  int i;
-
-  // stack to store integer values.
-  stack <int> values;
-
-  // stack to store operators.
-  stack <char> ops;
-
-  for(i = 0; i < tokens.length(); i++){
-
-    // Current token is a whitespace,
-    // skip it.
-    if(tokens[i] == ' ')
-      continue;
-
-    // Current token is an opening
-    // brace, push it to 'ops'
-    else if(tokens[i] == '('){
-      ops.push(tokens[i]);
-    }
-
-    // Current token is a number, push
-    // it to stack for numbers.
-    else if(isdigit(tokens[i])){
-      int val = 0;
-
-      // There may be more than one
-      // digits in number.
-      while(i < tokens.length() &&
-	    isdigit(tokens[i]))
-	{
-	  val = (val*10) + (tokens[i]-'0');
-	  i++;
-	}
-
-      values.push(val);
-
-      // right now the i points to
-      // the character next to the digit,
-      // since the for loop also increases
-      // the i, we would skip one
-      //  token position; we need to
-      // decrease the value of i by 1 to
-      // correct the offset.
-      i--;
-    }
-
-    // Closing brace encountered, solve
-    // entire brace.
-    else if(tokens[i] == ')')
-      {
-	while(!ops.empty() && ops.top() != '(')
-	  {
-	    int val2 = values.top();
-	    values.pop();
-
-	    int val1 = values.top();
-	    values.pop();
-
-	    char op = ops.top();
-	    ops.pop();
-
-	    values.push(applyOp(val1, val2, op));
-	  }
-
-	// pop opening brace.
-	if(!ops.empty())
-	  ops.pop();
-      }
-
-    // Current token is an operator.
-    else
-      {
-	// While top of 'ops' has same or greater
-	// precedence to current token, which
-	// is an operator. Apply operator on top
-	// of 'ops' to top two elements in values stack.
-	while(!ops.empty() && precedence(ops.top())
-	      >= precedence(tokens[i])){
-	  int val2 = values.top();
-	  values.pop();
-
-	  int val1 = values.top();
-	  values.pop();
-
-	  char op = ops.top();
-	  ops.pop();
-
-	  values.push(applyOp(val1, val2, op));
-	}
-
-	// Push current token to 'ops'.
-	ops.push(tokens[i]);
-      }
+//Output prefix expression
+void pre(Node* t) {
+  if(t != NULL) {
+    cout << t->getValue();
+    pre(t->getLeft());
+    pre(t->getRight());
   }
+}
 
-  // Entire expression has been parsed at this
-  // point, apply remaining ops to remaining
-  // values.
-  while(!ops.empty()){
-    int val2 = values.top();
-    values.pop();
-
-    int val1 = values.top();
-    values.pop();
-
-    char op = ops.top();
-    ops.pop();
-
-    values.push(applyOp(val1, val2, op));
+//Output infix expression
+void in(Node* t) {
+  if(t != NULL) {
+    in(t->left);
+    cout << t->value;
+    in(t->right);
   }
+}
 
-  // Top of 'values' contains result, return it.
-  return values.top();
+//Output postfix expression
+void post(Node* t) {
+  if(t != NULL) {
+    post(t->left);
+    post(t->right);
+    cout << t->value;
+  }
 }

@@ -12,11 +12,7 @@ void Stack::push(char n) {
 
   Node* temp = new Node(n);
 
-  if(top == NULL) {
-    temp->next = NULL;
-  } else {
-    temp->next = top;
-  }
+  temp->next = top;
   top = temp;
 }
 
@@ -28,11 +24,17 @@ void Stack::pop() {
   } else {
     Node* temp = top;
     top = top->next;
-    delete(temp);
+    free(temp);
   }
 }
 
 char Stack::peek() {
+
+  if(top == NULL) {
+    return 'x';
+  } else {
+    return top->value;
+  }
   return top->value;
 }
 
