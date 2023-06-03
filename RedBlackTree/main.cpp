@@ -28,8 +28,10 @@ int main() {
   add(2, rbt);
   add(9, rbt);
   int s = -3;
-  //print(s, rbt->root);
-  //del(6, rbt);
+  print(s, rbt->root);
+  cout << "- - - - - - " << endl;
+  del(4, rbt);
+  del(2, rbt);
   print(s, rbt->root);
   return 0;
 }
@@ -193,10 +195,13 @@ void transplant(Node* x, Node* y, RedBlackTree* r) {
     r->root = y;
   } else if(x != NULL && x->parent != NULL && x == x->parent->left) {
     x->parent->left = y;
-  } else {
+  } else if(x != NULL && x->parent != NULL) {
     x->parent->right = y;
   }
-  y->parent = x->parent;
+
+  if(y != NULL && x != NULL) {
+    y->parent = x->parent;
+  }
 }
 
 void del(int v, RedBlackTree* r) {
@@ -204,26 +209,24 @@ void del(int v, RedBlackTree* r) {
   Node* z = NULL;
   Node* x;
   Node* y;
+  Node* b = r->root;
 
-  while(r->root != NULL) {
-    if(r->root->value == v) {
-      z = r->root;
+  while(b != NULL) {
+    if(b->value == v) {
+      z = b;
     }
 
-    if(r->root->value <= v) {
-      r->root = r->root->right;
+    if(b->value <= v) {
+      b = b->right;
     } else {
-      r->root = r->root->left;
+      b = b->left;
     }
   }
-  cout << "here" << endl;
 
   if(z == NULL) {
     cout << "Value is not in tree." << endl;
     return;
   }
-
-  cout << "here too" << endl;
 
   y = z;
   char origColor = y->color;
@@ -237,32 +240,39 @@ void del(int v, RedBlackTree* r) {
     transplant(z, z->left, r);
     
   } else {
-    while(z->right->left != NULL) {
-      z->right = z->right->left;
+
+    Node* c = z->right;
+    while(c->left != NULL) {
+      c = c->left;
     }
+    y = c;
     origColor = y->color;
     x = y->right;
     
-    if(y->parent == z) {
+    if(y != NULL && x != NULL && y->parent == z) {
       x->parent = y;
       
-    } else {
+    } else if(y != NULL) {
       transplant(y, y->right, r);
       y->right = z->right;
-      y->right->parent = y;
-    }
+
+      if(y->right != NULL) {
+	y->right->parent = y;
+      }
+    } 
 
     transplant(z, y, r);
     y->left = z->left;
     y->left->parent = y;
     y->color = z->color;
   }
+  
   delete z;
   
   if(origColor == 'B') {
     Node* a;
 
-    while(x != r->root && x->color == 'B') {
+    while(x != NULL && x != r->root && x->color == 'B') {
 
       if(x == x->parent->left) {
 	a = x->parent->right;
@@ -283,6 +293,7 @@ void del(int v, RedBlackTree* r) {
 	    a->left->color = 'B';
 	    a->color = 'R';
 	    rotateRight(a, r);
+	    a = x->parent->right;
 	  }
 
 	  a->color = x->parent->color;
@@ -321,7 +332,9 @@ void del(int v, RedBlackTree* r) {
 	}
       }
     }
-    x->color = 'B';
+    if(x != NULL) {
+      x->color = 'B';
+    }
   }
 }
 
