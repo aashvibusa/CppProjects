@@ -6,7 +6,9 @@ using namespace std;
 
 class Node {
  public:
-  Node(int v);
+  Node();
+  void setValue(int v);
+  int getValue();
  public:
   int value;
   char color;

@@ -3,10 +3,18 @@
 
 using namespace std;
 
-Node::Node(int v) {
-  value = v;
+Node::Node() {
+  value = 0;
   color = 'B';
   parent = NULL;
   right = NULL;
   left = NULL;
+}
+
+void Node::setValue(int v) {
+  value = v;
+}
+
+int Node::getValue() {
+  return value;
 }
